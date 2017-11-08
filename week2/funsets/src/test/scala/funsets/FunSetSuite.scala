@@ -97,7 +97,8 @@ class FunSetSuite extends FunSuite {
        * The string argument of "assert" is a message that is printed in case
        * the test fails. This helps identifying which assertion failed.
        */
-      assert(contains(s1, 1), "Singleton")
+      assert(contains(s1, 1), "Singleton should contain teh element used to create it")
+      assert(!contains(s1, 2), "Singleton should not contain other stuff")
     }
   }
 
@@ -107,6 +108,23 @@ class FunSetSuite extends FunSuite {
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+    }
+  }
+
+  test("filter returns a set with only the elements that matches the predicate") {
+    new TestSets {
+      val s = union(union(s1, s2), s3)
+      private val setWithEvenNumbers = filter(s, (x: Int) => x % 2 == 0)
+      assert(contains(setWithEvenNumbers, 2), "contains the filtered")
+      assert(!contains(setWithEvenNumbers, 3), "does not contain the not filtered")
+      assert(!contains(setWithEvenNumbers, 4), "does not contain element not in the original set")
+    }
+  }
+
+  test("forall returns true when all elements fit predicate") {
+    new TestSets {
+      val s4 = singletonSet(-1000)
+      assert(forall(s4, (x: Int) => x < 1000), "all elements in set fits")
     }
   }
 
